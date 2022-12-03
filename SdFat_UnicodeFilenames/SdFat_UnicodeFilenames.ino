@@ -84,6 +84,19 @@ void setup() {
   Serial.println("After remove and rmdir");
   sd.ls(LS_SIZE | LS_R);
 #endif  // REMOVE_UTF8_FILES
+  auto myFile = sd.open("flac/蔡淳佳 - 依恋.flac");
+  if (myFile) {
+    Serial.println("flac:");
+    // read from the file until there's nothing else in it:
+    while (myFile.available()) {
+      Serial.write(myFile.read());
+    }
+    // close the file:
+    myFile.close();
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening");
+  }
   Serial.println("Done!");
 }
 void loop() {
