@@ -6,7 +6,7 @@
 
 
 #define SOFTSD_MOSI_PIN (GPIO_NUM_23)
-#define SOFTSD_MISO_PIN (GPIO_NUM_19)
+#define SOFTSD_MISO_PIN (GPIO_NUM_38)
 #define SOFTSD_SCK_PIN (GPIO_NUM_18)
 #define SD_CS_PIN (GPIO_NUM_4)
 
@@ -42,16 +42,17 @@ FsFile file;
 #endif  // SD_FAT_TYPE
 
 void setup() {
-  M5.begin();  //Init M5Core2.  初始化 M5Core2
-  /* Power chip connected to gpio21, gpio22, I2C device
-    Set battery charging voltage and current
-    If used battery, please call this function in your project */
-  M5.Lcd.print("Hello World");  // Print text on the screen (string) 在屏幕上打印文本(字符串)
-  // Serial.begin(115200);
-  Serial.println("Type any character to begin");
-  //  while (!Serial.available()) {
-  //    // yield();
-  //  }
+  Serial.begin(115200);
+  Serial.println("Hello World");
+  M5.Axp.begin();
+  //  pinMode(SD_CS_PIN, OUTPUT);
+  //  digitalWrite(SD_CS_PIN, HIGH);
+  SPI.begin(SOFTSD_SCK_PIN, SOFTSD_MISO_PIN, SOFTSD_MOSI_PIN);
+  //  SPI.setFrequency(20000000);
+  // SPI.begin();
+  // SPI.begin(SOFTSD_SCK_PIN, SOFTSD_MISO_PIN, SOFTSD_MOSI_PIN, -1);
+
+  // SD.begin(SD_CS_PIN, SPI, 20000000);
   if (!sd.begin(SD_CONFIG)) {
     sd.initErrorHalt(&Serial);
   }
@@ -85,11 +86,17 @@ void setup() {
   sd.ls(LS_SIZE | LS_R);
 #endif  // REMOVE_UTF8_FILES
   auto myFile = sd.open("flac/蔡淳佳 - 依恋.flac");
+  size_t cnt = 0;
   if (myFile) {
     Serial.println("flac:");
     // read from the file until there's nothing else in it:
     while (myFile.available()) {
-      Serial.write(myFile.read());
+      auto c = myFile.read();
+      Serial.write(c);
+      cnt++;
+      if (cnt > 256) {
+        break;
+      }
     }
     // close the file:
     myFile.close();
