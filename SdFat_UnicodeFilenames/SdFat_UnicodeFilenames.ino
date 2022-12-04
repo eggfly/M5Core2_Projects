@@ -27,27 +27,30 @@ const char* names[] = {u8"россиянин", u8"très élégant", u8"狗.txt",
 
 #if SD_FAT_TYPE == 0
 SdFat sd;
-File file;
+//File file;
 #elif SD_FAT_TYPE == 1
 SdFat32 sd;
-File32 file;
+//File32 file;
 #elif SD_FAT_TYPE == 2
 SdExFat sd;
-ExFile file;
+//ExFile file;
 #elif SD_FAT_TYPE == 3
 SdFs sd;
-FsFile file;
+//FsFile file;
 #else  // SD_FAT_TYPE
 #error Invalid SD_FAT_TYPE
 #endif  // SD_FAT_TYPE
 
 void setup() {
-  Serial.begin(115200);
-  Serial.println("Hello World");
-  M5.Axp.begin();
+  // Serial.begin(115200);
+  // Serial.println("Hello World");
+  M5.begin();
+  // M5.Axp.begin();
   //  pinMode(SD_CS_PIN, OUTPUT);
   //  digitalWrite(SD_CS_PIN, HIGH);
-  SPI.begin(SOFTSD_SCK_PIN, SOFTSD_MISO_PIN, SOFTSD_MOSI_PIN);
+  // SPI.begin(SOFTSD_SCK_PIN, SOFTSD_MISO_PIN, SOFTSD_MOSI_PIN, -1);
+  // M5.Lcd.begin();
+  M5.Lcd.print("Hello World");
   //  SPI.setFrequency(20000000);
   // SPI.begin();
   // SPI.begin(SOFTSD_SCK_PIN, SOFTSD_MISO_PIN, SOFTSD_MOSI_PIN, -1);
